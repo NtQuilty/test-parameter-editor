@@ -34,7 +34,8 @@
   "scripts": {
     "build": "tsc -b && vite build",
     "dev": "vite",
-    "lint": "eslint .",
+    "format": "biome format --write .",
+    "lint": "biome check .",
     "preview": "vite preview",
     "test": "vitest"
   },
