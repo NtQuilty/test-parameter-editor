@@ -6,9 +6,11 @@ export interface Parameter {
   type: string
 }
 
+export type ParameterValueType = string | number | boolean | null | undefined | Date
+
 export interface ParameterValue {
   paramId: number
-  value: string | number
+  value: ParameterValueType
 }
 
 export interface ParameterModel {
@@ -33,23 +35,21 @@ const ParameterType = {
 } as const
 
 interface DynamicFormState {
-  values: Record<number, string | number>
+  values: Record<number, ParameterValueType>
 }
 
 export class DynamicForm extends React.Component<DynamicFormProps, DynamicFormState> {
   constructor(props: DynamicFormProps) {
     super(props)
 
-    const { params = [], model } = props
+    const { model } = props
 
-    const values = Object.fromEntries(
-      params.map((param) => [param.id, model.paramValues.find((pv) => pv.paramId === param.id)?.value ?? ""])
-    )
+    const values = Object.fromEntries(model.paramValues.map((pv) => [pv.paramId, pv.value]))
 
     this.state = { values }
   }
 
-  handleChange = (paramId: number, value: string) => {
+  handleChange = (paramId: number, value: ParameterValueType) => {
     this.setState(
       (prevState) => ({
         values: {
@@ -65,10 +65,12 @@ export class DynamicForm extends React.Component<DynamicFormProps, DynamicFormSt
     const { params, model } = this.props
     const { values } = this.state
 
-    const paramValues: ParameterValue[] = params.map((param) => ({
-      paramId: param.id,
-      value: values[param.id] || "",
-    }))
+    const paramValues: ParameterValue[] = params
+      .filter((param) => param.type === ParameterType.String)
+      .map((param) => ({
+        paramId: param.id,
+        value: values[param.id] || "",
+      }))
 
     return {
       colors: model.colors,
@@ -84,6 +86,8 @@ export class DynamicForm extends React.Component<DynamicFormProps, DynamicFormSt
       <form>
         {params.map((param) => {
           if (param.type === ParameterType.String) {
+            const newValue = values[param.id] || ""
+
             return (
               <div data-testid={`param-field-${param.id}`} key={param.id}>
                 <label htmlFor={`param-${param.id}`}>{param.name}</label>
@@ -92,7 +96,7 @@ export class DynamicForm extends React.Component<DynamicFormProps, DynamicFormSt
                   id={`param-${param.id}`}
                   onChange={(e) => this.handleChange(param.id, e.target.value)}
                   type="text"
-                  value={values[param.id] || ""}
+                  value={String(newValue ?? "")}
                 />
               </div>
             )

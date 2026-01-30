@@ -66,7 +66,7 @@ describe("DynamicForm", () => {
       fireEvent.change(lastNameInput, { target: { value: "Иванов" } })
 
       expect(capturedModel?.colors).toEqual(["red", "green", "blue"])
-      expect(capturedModel?.paramValues).toHaveLength(3)
+      expect(capturedModel?.paramValues).toHaveLength(2)
       expect(capturedModel?.paramValues).toContainEqual({
         paramId: 2,
         value: "Иванов",
@@ -89,10 +89,9 @@ describe("DynamicForm", () => {
       const nameInput = screen.getByTestId("param-input-1")
       fireEvent.change(nameInput, { target: { value: "Test" } })
 
-      expect(capturedModel?.paramValues).toHaveLength(3)
+      expect(capturedModel?.paramValues).toHaveLength(2)
       expect(capturedModel?.paramValues.find((pv) => pv.paramId === 1)).toBeDefined()
       expect(capturedModel?.paramValues.find((pv) => pv.paramId === 2)).toBeDefined()
-      expect(capturedModel?.paramValues.find((pv) => pv.paramId === 3)).toBeDefined()
     })
   })
 

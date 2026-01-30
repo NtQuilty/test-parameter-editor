@@ -1,6 +1,6 @@
 import type { Parameter, ParameterModel } from "./DynamicForm"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 import { DynamicForm } from "./DynamicForm"
 import { JsonEditor } from "./JsonEditor"
@@ -16,7 +16,7 @@ const initialModel: ParameterModel = {
   paramValues: [
     { paramId: 1, value: "повседневное" },
     { paramId: 2, value: "макси" },
-    { paramId: 3, value: 122 },
+    { paramId: 3, value: null },
   ],
 }
 
@@ -24,7 +24,15 @@ export const App = () => {
   const [params, setParams] = useState<Parameter[]>(initialParameter)
   const [model, setModel] = useState<ParameterModel>(initialModel)
 
-  const handleGetModel = () => alert(JSON.stringify(model, null, 2))
+  const formRef = useRef<DynamicForm>(null)
+
+  const handleGetModel = () => {
+    if (!formRef.current) return
+
+    const formModel = formRef.current.getModel()
+
+    alert(JSON.stringify(formModel, null, 2))
+  }
 
   const handleModelChange = (newModel: ParameterModel) => setModel(newModel)
 
@@ -32,7 +40,8 @@ export const App = () => {
     <div style={{ margin: "0 auto", maxWidth: "900px", padding: "20px" }}>
       <JsonEditor initialValue={initialParameter} onChange={setParams} value={params} />
 
-      <DynamicForm model={model} onChange={handleModelChange} params={params} />
+      <DynamicForm model={model} onChange={handleModelChange} params={params} ref={formRef} />
+
       {params.length > 0 ? (
         <button onClick={handleGetModel} style={{ marginTop: "20px" }} type="button">
           Отправить
