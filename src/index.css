@@ -54,3 +54,34 @@ label {
   margin-bottom: 0.3rem;
   display: block;
 }
+
+.json-editor-title {
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+.json-editor-textarea {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 13px;
+  padding: 10px;
+  width: 100%;
+  min-height: 300px;
+}
+
+.json-editor-textarea.error {
+  background-color: #fff5f5;
+  border: 2px solid #ff4444;
+}
+
+.json-editor-error {
+  background-color: #fff5f5;
+  border: 1px solid #ffcccc;
+  border-radius: 4px;
+  color: #ff4444;
+  font-size: 12px;
+  margin-top: 6px;
+  padding: 8px;
+}
